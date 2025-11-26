@@ -31,20 +31,22 @@
             @foreach (var anime in animeList)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <img src="@anime.Images.Jpg.LargeImageUrl" class="card-img-top" alt="@anime.Title" style="height: 300px; object-fit: cover;">
+                    <a href="/anime/@anime.MalId" class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow-sm custom-hover">
+                            <img src="@anime.Images.Jpg.LargeImageUrl" class="card-img-top" alt="@anime.Title" style="height: 300px; object-fit: cover;">
 
-                        <div class="card-body">
-                            <h5 class="card-title text-truncate">@anime.Title</h5>
-                            <p class="card-text small text-muted">
-                                @(anime.Studios?.FirstOrDefault()?.Name ?? "Bilinmiyor")
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="badge bg-warning text-dark">⭐ @(anime.Score?.ToString() ?? "N/A")</span>
-                                <span class="badge bg-secondary">@anime.Type</span>
+                            <div class="card-body">
+                                <h5 class="card-title text-truncate">@anime.Title</h5>
+                                <p class="card-text small text-muted">
+                                    @(anime.Studios?.FirstOrDefault()?.Name ?? "Bilinmiyor")
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-warning text-dark">⭐ @(anime.Score?.ToString() ?? "N/A")</span>
+                                    <span class="badge bg-secondary">@anime.Type</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             }
         </div>

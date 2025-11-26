@@ -1,0 +1,91 @@
+﻿@page "/anime/{id:int}"
+@using AnimeFrontend.Services
+@using AnimeShared
+@inject ClientAnimeService AnimeService
+@inject NavigationManager NavManager
+
+<PageTitle>@(anime?.Title ?? "Yükleniyor...")</PageTitle>
+
+<div class="container mt-5">
+    <button class="btn btn-outline-secondary mb-3" @onclick="GoBack">← Geri Dön</button>
+
+    @if (anime == null)
+    {
+        <div class="text-center mt-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Anime detayları getiriliyor...</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <img src="@anime.Images.Jpg.LargeImageUrl" class="img-fluid rounded shadow-lg w-100" alt="@anime.Title">
+
+                <div class="mt-3 text-center">
+                    <span class="badge bg-primary fs-6 me-1">Skor: @(anime.Score?.ToString() ?? "?")</span>
+                    <span class="badge bg-success fs-6">@anime.Status</span>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold">@anime.Title</h1>
+                <h4 class="text-muted mb-4">@anime.TitleJapanese</h4>
+
+                <div class="mb-4">
+                    <strong>Türler:</strong>
+                    @if (anime.Genres != null)
+                    {
+                        @foreach (var genre in anime.Genres)
+                        {
+                            <span class="badge bg-secondary me-1">@genre.Name</span>
+                        }
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <strong>Stüdyo:</strong>
+                    @if (anime.Studios != null && anime.Studios.Any())
+                    {
+                        <span>@anime.Studios.First().Name</span>
+                    }
+                    else
+                    {
+                        <span>Bilinmiyor</span>
+                    }
+                </div>
+
+                <div class="card bg-light border-0 p-3">
+                    <h5 class="fw-bold">Konusu (Synopsis)</h5>
+                    <p class="card-text" style="white-space: pre-line">
+                        @(string.IsNullOrEmpty(anime.Synopsis) ? "Özet bulunamadı." : anime.Synopsis)
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; } // URL'den gelen ID (örn: /anime/20)
+
+    private AnimeDTO? anime;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            anime = await AnimeService.GetAnimeById(Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Hata: " + ex.Message);
+        }
+    }
+
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/");
+    }
+}
